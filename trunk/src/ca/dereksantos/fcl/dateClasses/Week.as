@@ -74,13 +74,12 @@ package ca.dereksantos.fcl.dateClasses {
 			
 		}
 		
-		
 		/**
 		 * Returns the week number of the year.
 		 * 
 		 * @return int - The calculated week number.
 		 */
-		public function weekNumber( ):int {
+		public function get weekNumber( ):int {
 			var yearStart:Date = new Date( );
 			var difference:Number; 
 			var week:Number;
