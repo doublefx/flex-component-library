@@ -1,4 +1,4 @@
-package ca.dereksantos.fcl.util{
+package ca.dereksantos.fcl.core {
 	
 	public interface IComparator {
 		

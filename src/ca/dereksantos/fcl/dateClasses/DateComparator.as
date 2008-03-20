@@ -1,6 +1,6 @@
 package ca.dereksantos.fcl.dateClasses {
 	
-	import ca.dereksantos.fcl.util.IComparator;
+	import ca.dereksantos.fcl.core.IComparator;
 
 	public class DateComparator implements IComparator {
 		

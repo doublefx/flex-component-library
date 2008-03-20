@@ -43,7 +43,7 @@ package ca.dereksantos.fcl.dateClasses {
 		 */		
 		override public function get endDate():Date {
 			var date:Date = DateUtil.cloneDate( initialDate );
-			date.setTime( numDays ); 
+			date.setDate( numDays ); 
 			return date;
 		}
 		

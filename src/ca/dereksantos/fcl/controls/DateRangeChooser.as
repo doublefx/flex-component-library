@@ -1,5 +1,15 @@
-// http://code.google.com/p/flex-comp-lib/
+/*
+	(c) Copyright Derek Santos 
+	www.dereksantos.ca
+	
+	Flex Component Library
+	http://code.google.com/p/flex-component-library/
+	
+	
 
+
+
+*/
 package ca.dereksantos.fcl.controls {
 	
 	import ca.dereksantos.fcl.dateClasses.DateComparator;
@@ -9,7 +19,9 @@ package ca.dereksantos.fcl.controls {
 	import ca.dereksantos.fcl.dateClasses.Week;
 	import ca.dereksantos.fcl.events.DateRangeChangeEvent;
 	
+	import mx.controls.Button;
 	import mx.controls.DateChooser;
+	import mx.core.UIComponent;
 	import mx.events.CalendarLayoutChangeEvent;
 	
 	//---------------------------------------------------------
@@ -42,6 +54,7 @@ package ca.dereksantos.fcl.controls {
 		//------------------------------------------------------------------
 		private var _selectedRange:IDateRange;
 		
+		[Bindable]
 		/**
 		 * <p>
 		 * The <code>selectedRange</code> property is used to store the range of dates that the user has selected.
@@ -77,6 +90,7 @@ package ca.dereksantos.fcl.controls {
 		 * 		<li><b>month</b> - A full month will be selected at a time.</li>
 		 * </ul>
 		 * 
+		 * @default day
 		 * @return String
 		 * 
 		 */		
@@ -95,6 +109,32 @@ package ca.dereksantos.fcl.controls {
 			_rangeType = value;
 		}
 		
+		
+		/**
+		 * Read-only
+		 * 
+		 * <p>
+		 * Returns true if the current value of the <code>selectedDate</code> propoerty is outside the bounds of the
+		 * current value of the <code>selectedRange</code> property.
+		 * </p>
+		 *  
+		 * @return Boolean - Whether or not the <code>selectedDate</code> is outside the <code>selectedRange</code> 
+		 * 
+		 */		
+		public function get isOutsideRange( ):Boolean {
+			var comparator:DateComparator = new DateComparator( );
+			if( comparator.compare( selectedDate, selectedRange.startDate ) == -1 || comparator.compare( selectedDate, selectedRange.endDate ) 	==  1 ) {
+			    return true;
+			}
+			return false;
+		}
+		
+		
+		
+		//----------------------------------------------------------------
+		// Constructor.
+		//----------------------------------------------------------------
+		
 		/**
 		 * Constructor. 
 		 * 
@@ -107,7 +147,6 @@ package ca.dereksantos.fcl.controls {
 			super( );
 			
 			selectedDate = new Date( );
-			
 		}
 		
 		/**
@@ -126,38 +165,74 @@ package ca.dereksantos.fcl.controls {
 		}
 		
 		/**
+		 * <p>
+		 * Creates the date range using the <code>selectedDate</code> property. 
+		 * </p>
+		 * 
+		 * <p>
+		 * This function will dispatch the <code>dateRangeChange</code> event if the new <code>selectedDate</code>
+		 * fallse outside the current range.
+		 * </p>
 		 * 
 		 * 
 		 */		
 		protected function updateSelection( ):void {
-			var comparator:DateComparator = new DateComparator( );
-			
 			if( selectedRange != null ) {
-				if( comparator.compare( selectedDate, selectedRange.startDate ) == -1 ||
-					comparator.compare( selectedDate, selectedRange.endDate ) == 1 ) {
+				
+				//Get the value of the range before creating the new range.
+				var oldRange:IDateRange = selectedRange;
+				//This value must be captured before creating the new range or it will not be accurate.
+				var isChanged:Boolean = isOutsideRange;
 					
-					var oldRange:IDateRange = selectedRange;
-					var event:DateRangeChangeEvent;
-					
-					switch(rangeType) {
-						
-						case Week.WEEK:
-							selectedRange = new Week( selectedDate );
-							event = new DateRangeChangeEvent( oldRange , selectedRange , DateRangeChangeEvent.EVENT_DATA_RANGE_CHANGE );
-							dispatchEvent(event);
-							break;
-						case Month.MONTH:
-							selectedRange = new Month( selectedDate );
-							event = new DateRangeChangeEvent( oldRange , selectedRange , DateRangeChangeEvent.EVENT_DATA_RANGE_CHANGE );
-							dispatchEvent(event);
-							break;
-						default:
-							//do nothing if the event type is day.
-							break; 
-					}
+				switch(rangeType) {
+					case Week.WEEK:
+						selectedRange = new Week( selectedDate );
+						break;
+					case Month.MONTH:
+						selectedRange = new Month( selectedDate );
+						break;
+				}
+				//Once the new range has been created, dispatch the dateRangeChange event if the range has been changed.
+				if( isChanged ) {
+					var event:DateRangeChangeEvent = new DateRangeChangeEvent( oldRange , selectedRange , DateRangeChangeEvent.EVENT_DATA_RANGE_CHANGE );
+					dispatchEvent(event);
 				}
 			}
 		}
+		
+		
+		
+		
+		override protected function createChildren( ):void {
+			super.createChildren( );
+			
+			graphics.beginFill( 0xFF0000 );
+			graphics.drawRect( x , y , 300, 300);
+
+//			var comp:UIComponent = new UIComponent();
+//			comp.width = width;
+//			comp.height = height;
+//			comp.x = 0;
+//			comp.y = 0;
+//			comp.graphics.beginFill( 0x000000, 1 );
+//			comp.graphics.drawRect( comp.x, comp.y, comp.width, comp.height );
+//			
+//			addChild( new Button( ) );
+//			
+//			invalidateDisplayList( );
+//			updateDisplayList( unscaledWidth, unscaledHeight );
+//			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}
