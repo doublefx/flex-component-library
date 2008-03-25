@@ -51,8 +51,7 @@ package ca.dereksantos.fcl.dateClasses {
 		 * 
 		 */		
 		public function Week( date:Date ) {
-			super( );
-			initialDate = DateUtil.cloneDate( date );
+			super( date );
 		}
 		
 		

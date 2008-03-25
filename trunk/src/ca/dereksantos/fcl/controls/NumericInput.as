@@ -78,22 +78,10 @@ package ca.dereksantos.fcl.controls {
 		 * @public 
 		 */		
 		public function set value(pValue:Number):void {
-			
+			trace('NumericInput.value( pValue = ' + pValue + ' )');
 			if(isValid(pValue)) {
 				this._value = pValue;
-				if(showLeadingZeros) {
-					text = "";
-					var length:int;
-					length = maxValue.toString().split('.')[0].toString().length - value.toString().split('.')[0].toString().length;
-					if(length > 0) {
-						for(var i:int = 0; i < length; i++) {
-							text += '0';	
-						}						
-					}
-					text += (text != null) ? value.toString() : "0";
-				} else {
-					text = value.toString();
-				}
+				addZeros( );
 			}
 		}
 		
@@ -238,6 +226,36 @@ package ca.dereksantos.fcl.controls {
 		 */		
 		private function isValid(value:Object):Boolean {
 			return (Number(value) >= minValue && Number(value) <= maxValue);
+		}
+		
+		
+		protected function addZeros( ):void {
+			if(showLeadingZeros) {
+				text = "";
+				var length:int;
+				length = maxValue.toString().split('.')[0].toString().length - value.toString().split('.')[0].toString().length;
+				if(length > 0) {
+					for(var i:int = 0; i < length; i++) {
+						text += '0';	
+					}						
+				}
+				text += (text != null) ? value.toString() : "0";
+			} else {
+				text = value.toString();
+			}
+		}
+		
+		/**
+		 *  
+		 * @param unscaledWidth
+		 * @param unscaledHeight
+		 * 
+		 */		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList( unscaledWidth, unscaledHeight );
+			
+			addZeros( );
+			
 		}
 			
 	}

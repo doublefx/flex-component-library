@@ -1,5 +1,7 @@
 package ca.dereksantos.fcl.dateClasses {
 	
+	import ca.dereksantos.fcl.util.DateUtil;
+	
 	import mx.collections.ArrayCollection;
 
 	/**
@@ -9,9 +11,9 @@ package ca.dereksantos.fcl.dateClasses {
 	 */	
 	internal class AbstractDateRange extends ArrayCollection implements IDateRange {
 		
-		//////////////////////////////////////////////////////////
-		// _initialDate property.
-		//////////////////////////////////////////////////////////
+		//------------------------------------------------------------------------------
+		// _initialDate attribute
+		//------------------------------------------------------------------------------
 		private var _initialDate:Date;
 		
 		/**
@@ -24,36 +26,52 @@ package ca.dereksantos.fcl.dateClasses {
 		 * @param value
 		 * 
 		 */	
-		public function get initialDate():Date {
-			return _initialDate;
-		}
+		public function get initialDate():Date { return _initialDate; }
 		public function set initialDate(value:Date):void {
 			_initialDate = value;
-			calculate( );	
-		}
-		
-		public function get startDate( ):Date {
-			return getItemAt(0) as Date;
-		}
-
-		public function get endDate( ):Date {
-			return getItemAt( length - 1 ) as Date;
+			calculate( );
 		}
 		
 		/**
-		 * Constructor.
+		 * Read-only
 		 * 
+		 * <p>
+		 * The <code>startDate</code> property will return the first date in the range.
+		 * </p>
+		 * 
+		 * @return Date 
+		 * 
+		 */		
+		public function get startDate( ):Date {return getItemAt(0) as Date;}
+		
+		/**
+		 * Read-only
+		 * 
+		 * <p>
+		 * The <code>endDate</code> property will return the last date in the range.
+		 * </p>
+		 * 
+		 * @return Date 
+		 * 
+		 */		
+		public function get endDate( ):Date {return getItemAt( length - 1 ) as Date;}
+		
+		//------------------------------------------------------------------------------
+		//	Constructor.
+		//------------------------------------------------------------------------------
+		
+		/**
+		 * Constructor.
 		 */
-		public function AbstractDateRange( ) {
-			_initialDate = new Date( );
+		public function AbstractDateRange( date:Date ) {
+			initialDate = DateUtil.cloneDate( date );
 		}
 	
 		/**
 		 * Determines the Dates in the range using the <code>initialDate</code> property. 
 		 * 
 		 */
-		public function calculate( ):void {
-		}
+		public function calculate( ):void { }
 		
 		/**
 		 * <p>
