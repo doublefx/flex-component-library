@@ -6,19 +6,6 @@ package ca.dereksantos.fcl.dateClasses {
 		
 		public static const MONTH:String = "month";
 		
-		private var numDays:Number = 0;
-		
-		override public function set initialDate(value:Date):void {
-			var date:Date = DateUtil.cloneDate( value );
-			date.setMonth( date.getMonth( ) + 1, 1 );
-			date.setHours( 0, 0, 0, 0 );
-			date.setTime( date.getTime( ) - DateUtil.DAY_IN_MILLESECONDS );
-			numDays = date.getDate( );
-
-			super.initialDate = value;
-		}
-		
-		
 		/**
 		 * Read-only calculated property.
 		 * 
@@ -43,8 +30,24 @@ package ca.dereksantos.fcl.dateClasses {
 		 */		
 		override public function get endDate():Date {
 			var date:Date = DateUtil.cloneDate( initialDate );
-			date.setDate( numDays ); 
+			date.setDate( numberOfDays ); 
 			return date;
+		}
+		
+		/**
+		 * Read-only
+		 * 
+		 * Returns the number of days in the month.
+		 * 
+		 * @return int 
+		 * 
+		 */		
+		public function get numberOfDays( ):int {
+			var date:Date = DateUtil.cloneDate( initialDate );
+			date.setMonth( date.getMonth( ) + 1, 1 );
+			date.setHours( 0, 0, 0, 0 );
+			date.setTime( date.getTime( ) - DateUtil.DAY_IN_MILLESECONDS );
+			return date.getDate( );
 		}
 		
 		
@@ -55,8 +58,7 @@ package ca.dereksantos.fcl.dateClasses {
 		 * 
 		 */		
 		public function Month( date:Date ) {
-			super();
-			initialDate = DateUtil.cloneDate( date );
+			super( date );
 		}
 		
 		
@@ -69,12 +71,11 @@ package ca.dereksantos.fcl.dateClasses {
 			super.calculate( );
 			
 			var date:Date;
-			for( var i:int = 0; i < numDays; i++ ) {
+			for( var i:int = 0; i < numberOfDays; i++ ) {
 				date = DateUtil.cloneDate( startDate );
 				date.setDate(date.getDate( ) + i);				
 				addItem(date);			
 			}
-			
 		}
 		
 		
