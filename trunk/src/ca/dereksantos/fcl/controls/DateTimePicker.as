@@ -27,7 +27,7 @@ package ca.dereksantos.fcl.controls {
 		public function get showDateField( ):Boolean { return _showDateField; }
 		public function set showDateField( value:Boolean ):void {
 			_showDateField = value;
-			invalidateDisplayList();
+			updateDisplay();
 		}
 		
 		//Attributes
@@ -44,7 +44,7 @@ package ca.dereksantos.fcl.controls {
 		 */		
 		public function DateTimePicker( ) {
 			super( );
-			value = new Date();
+			//value = new Date();
 		}
 		
 		
@@ -55,8 +55,9 @@ package ca.dereksantos.fcl.controls {
 		 * @param unscaledHeight
 		 * 
 		 */		
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-			super.updateDisplayList( unscaledWidth, unscaledHeight );
+		override protected function updateDisplay( ):void {
+			super.updateDisplay( );
+			dateField.selectedDate = value;
 			updateDateFieldDisplay( );
 		}
 		
@@ -139,8 +140,18 @@ package ca.dereksantos.fcl.controls {
 		 * 
 		 */		
 		protected function changeHandler( event:CalendarLayoutChangeEvent ):void {
-			value.setFullYear( event.newDate.getFullYear( ), event.newDate.getMonth( ), event.newDate.getDate( ) );
-			dispatchEvent( new Event( Event.CHANGE ) );
+			updateValue( );
+		}
+		
+		
+		override protected function updateValue():void {
+			if(!value)
+				value = new Date( );
+			
+			value.setFullYear( dateField.selectedDate.getFullYear( ), dateField.selectedDate.getMonth( ), dateField.selectedDate.getDate( ) );
+			super.updateValue();
+					
+					
 		}
 		
 	}

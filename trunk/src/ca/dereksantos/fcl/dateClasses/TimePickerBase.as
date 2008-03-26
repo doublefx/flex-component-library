@@ -122,7 +122,7 @@ package ca.dereksantos.fcl.dateClasses {
 		//-------------------------------------------------------------------
 		// _value property
 		//-------------------------------------------------------------------
-		private var _value:Date;
+		protected var _value:Date;
 		
 		[Bindable]
 		/**
@@ -131,10 +131,16 @@ package ca.dereksantos.fcl.dateClasses {
 		 * @return Date
 		 * 
 		 */		
-		public function get value( ):Date {	return _value; }
+		public function get value( ):Date {	
+			if(!_value) {
+				trace( 'value( ) creating new date **********' );
+				_value = new Date( );
+			}
+			return _value; 
+		}
 		public function set value( pValue:Date ):void {
+			trace('setting value | pvalue = ' + pValue.toString() );
 			_value = pValue;
-			invalidateDisplayList( );
 		}
 		
 		//--------------------------------------------------------------------
@@ -152,10 +158,14 @@ package ca.dereksantos.fcl.dateClasses {
 		protected function getCurrentInputFocus( ):Object { return _currentInputFocus; }
 		protected function setCurrentInputFocus( value:Object ):void { 
 			_currentInputFocus = value; 
-			invalidateDisplayList( );
+			updateDisplay( );
 		}
 		
 		
+		
+		public function get isChanged( ):Boolean {
+			return false;			
+		}
 		
 		//--------------------------------------------------------------------
 		// Constructor.
@@ -170,19 +180,18 @@ package ca.dereksantos.fcl.dateClasses {
 		
 		/**
 		 * <p>
-		 * The <code>commitProperties()</code> method will update the neccessary properties
+		 * The <code>updateValue()</code> method will update the neccessary properties
 		 * with the values from the UI.
 		 * </p>
-		 * <p>
-		 * This will get called by the Flex Invalidation system by queueing it with the <code>invalidateProperties( )</code> method.
-		 * </p>
 		 */		
-		override protected function commitProperties( ):void {
-			super.commitProperties( );
-			
+		protected function updateValue( ):void {
+		 	trace( 'TimePickerBase.updateValue( )' );
+		 	trace( 'value = ' + value.toString() );
 			//Make sure the value property is not null.
-			if(!value)
+			if(!value) {
+				trace('SETTING VALUE');				
 				value = new Date( );
+			}
 				
 			var hour:Number = hoursInput.value;
 			
@@ -191,34 +200,33 @@ package ca.dereksantos.fcl.dateClasses {
 			} else if ( hour >= 1 && hour < 12 && meridianInput.text == pm ) {
 				hour = hour + 12;
 			}
-			
+			trace( ' hour = ' + hour );
 			value.setHours( hour, minutesInput.value, secondsInput.value );
 			
 		 	dispatchEvent( new Event( Event.CHANGE ) );
+		 	
 				
 		}
 		
 		/**
 		 * <p>
-		 * The <code>updateDisplayList( )</code> will update the UI with the current values of the component.
-		 * </p>
-		 * 
-		 * <p>
-		 * The <code>updateDisplayList( )</code> method will be called by the Flex invalidation system by queueing it with the 
-		 * <code>invalidateDisplayList( )</code> method.
+		 * The <code>updateDisplay( )</code> will update the UI with the current values of the component.
 		 * </p>
 		 * 
 		 * @param unscaledWidth
 		 * @param unscaledHeight
 		 * 
 		 */		
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-			super.updateDisplayList( unscaledWidth, unscaledHeight );
+		protected function updateDisplay( ):void {
+			trace( 'TimePickerBase.updateDisplay( )' );
 			
 			applyStyles( );
 			
 			if(value) {
-					
+				trace( ' value = ' + value.toString() );
+				trace( ' hour = ' + value.getHours());
+				trace( ' minutes = ' + value.getMinutes());
+				trace( ' seconds = ' + value.getSeconds());
 				/*
 					hour = 0
 						12:00 AM
@@ -294,6 +302,8 @@ package ca.dereksantos.fcl.dateClasses {
 			//After creating children, call createChildren( ) of the superclass to invalidate.
 			super.createChildren( );
 			
+			trace( 'TimePickerBase.createChildren( )' );
+			updateDisplay();
 		}
 		
 			
@@ -443,7 +453,9 @@ package ca.dereksantos.fcl.dateClasses {
 		 * 
 		 */		
 		private function valueChangeHandler( event:Event ):void {
-			invalidateProperties( );
+			
+			trace( 'TimePickerBase.valueChangeHandler( )' );
+			updateValue( );
 		}
 		
 		

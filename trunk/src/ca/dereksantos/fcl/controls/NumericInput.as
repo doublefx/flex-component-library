@@ -16,16 +16,12 @@
 */
 package ca.dereksantos.fcl.controls {
 	
-	import mx.controls.TextInput;
 	import flash.events.Event;
-	import mx.events.ValidationResultEvent;
-	import mx.events.FlexEvent;
-	import mx.validators.NumberValidator;
-	import mx.validators.Validator;
-	import mx.controls.Alert;
 	import flash.events.FocusEvent;
-	import mx.formatters.NumberFormatter;
-	import mx.formatters.Formatter;
+	
+	import mx.controls.TextInput;
+	import mx.controls.dataGridClasses.DataGridListData;
+	import mx.controls.listClasses.ListData;
 		
 	///////////////////////////////////////////
 	// Events
@@ -163,6 +159,34 @@ package ca.dereksantos.fcl.controls {
 			this._showLeadingZeros = pValue;
 			value = value;//This will update the current display.
 		}
+		
+		
+		override public function set data(value:Object):void {
+			 super.data = value;
+			 
+			 var dataItem:Object;
+			
+	        if (listData && listData is DataGridListData) {
+	        	dataItem = data[DataGridListData(listData).dataField];
+	        } else if (listData is ListData && ListData(listData).labelField in data) {
+	            dataItem = data[ListData(listData).labelField];
+	        } else {
+	            dataItem = data;	
+	        }
+			
+			trace('dataItem = ' +dataItem );
+			
+			if(	isValid( dataItem ) ) {
+				_value = Number(dataItem);
+			} else {
+				_value = minValue;
+			}
+		}
+		
+		
+		
+		
+		
 		
 		/////////////////////////////////////////////////////////////
 		// Constructor
