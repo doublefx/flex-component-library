@@ -116,7 +116,7 @@ package ca.dereksantos.fcl.controls {
 	 * 
 	 * @eventType dslib.events.CalendarItemDropEvent 
 	 */	
-	[Event(name="itemDrop", type="dslib.events.CalendarItemDropEvent")]
+	[Event(name="itemDrop", type="ca.dereksantos.fcl.events.CalendarItemDropEvent")]
 	
 	/**
 	 * Dispatched when the delete button of an item is clicked and the item
@@ -124,7 +124,7 @@ package ca.dereksantos.fcl.controls {
 	 * 
 	 * @eventType dslib.events.CalendarItemDropEvent 
 	 */	
-	[Event(name="itemDelete", type="dslib.events.CalendarItemDropEvent")]
+	[Event(name="itemDelete", type="ca.dereksantos.fcl.events.CalendarItemDropEvent")]
 
 	
 	/**

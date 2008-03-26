@@ -21,7 +21,7 @@ package ca.dereksantos.fcl.controls {
 	 * @see ca.dereksantos.fcl.controls.DateTimePicker
 	 *  
 	 */	
-	public class TimePicker extends TimePickerBase implements IListItemRenderer,IDropInListItemRenderer,IDataRenderer,IFocusManagerComponent {
+	public class TimePicker extends TimePickerBase implements IListItemRenderer,IDropInListItemRenderer, IDataRenderer ,IFocusManagerComponent {
 		
 		//--------------------------------------------------------------
 		// Implements IDataRenderer Interface
@@ -38,7 +38,7 @@ package ca.dereksantos.fcl.controls {
 	     *
 	     *  <p>When you use the control as a drop-in item renderer or drop-in
 	     *  item editor, Flex automatically writes the current value of the item
-	     *  to the <code>selectedDate</code> property of this control.</p>
+	     *  to the <code>value</code> property of this control.</p>
 	     *
 	     *  @default null
 	     *  @see mx.core.IDataRenderer
@@ -54,25 +54,32 @@ package ca.dereksantos.fcl.controls {
 	        var dataItem:Object;
 			
 	        _data = value;
-	
-	        if (_listData && _listData is DataGridListData) {
+			
+			//If the parent control is a DataGrid, we use the DataGridListData object to grab the data field.
+	        if (_listData && _listData is DataGridListData)
 	        	dataItem = _data[DataGridListData(_listData).dataField];
-	        } else if (_listData is ListData && ListData(_listData).labelField in _data) {
+	        	
+	        //If the parent control is not a DataGrid, we can use the ListData object to grab the label field.
+	        else if (_listData is ListData && ListData(_listData).labelField in _data)
 	            dataItem = _data[ListData(_listData).labelField];
-	        } else if (_data is String) {
-	            dataItem = new Date(Date.parse(data as String));	
-	        } else {
+	            
+	        //If the data is a String, parse it into a Date.
+	        else if (_data is String)
+	            dataItem = new Date(Date.parse(data as String));
+	            	
+	        //Otherwise, just grab data.
+	        else
 	        	dataItem = _data;
-	        }
-	
+	        
+	        //Convert the dataItem to a Date and update the _value attribute.			
 	        if (dataItem is Date) {
-	            value = dataItem as Date;
+	            _value = dataItem as Date;
 	        } else if (dataItem is String) {
-	        	value = new Date(Date.parse(dataItem));
+	        	_value = new Date(Date.parse(dataItem));
 	        } else {
-	        	value = new Date();
+	        	_value = new Date();
 	        }
-	
+			updateDisplay( );
 	        dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
 	    }
 		
@@ -126,8 +133,9 @@ package ca.dereksantos.fcl.controls {
 		public function get showSeconds( ):Boolean { return _showSeconds; }
 		public function set showSeconds( value:Boolean ):void { 
 			_showSeconds = value
-			invalidateDisplayList();
+			updateDisplay();
 		}
+		
 		
 		//-------------------------------------------------------
 		// Constructor
@@ -181,9 +189,8 @@ package ca.dereksantos.fcl.controls {
 		 * @param unscaledHeight
 		 * 
 		 */		
-		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-			super.updateDisplayList( unscaledWidth, unscaledHeight );
-			
+		override protected function updateDisplay():void {
+			super.updateDisplay();
 			updateSecondsDisplay( );
 			
 		}
